@@ -31,7 +31,7 @@
 	<div class="row">
 	<div class="col">
 	</div>
-		<form action="/login" method="post">
+		<form action="/login" method="post" modelAttribute="user">
 			<div class="form-group">
 				<form:label path="email">Email</form:label>
 				<form:errors path="email"/>
@@ -52,7 +52,7 @@
 	<div class="col">
 	</div>
 	<h3>Register</h3>
-		<form action="/register" method="post" modelAttribute="user">
+		<form action="/register" method="post" modelAttribute="email">
 			<div class="form-group">
 				<form:label path="firstName">First Name</form:label>
 				<form:errors path="fristName"/>

@@ -11,6 +11,8 @@ import com.shunya.project2021.Repositories.UserRepository;
 public class UserValidator {
 	@Autowired
 	private UserRepository uRepo;
+	
+	
 	public boolean supports(User user) {
 		return User.class.equals(user);
 	}

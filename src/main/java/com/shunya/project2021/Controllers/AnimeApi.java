@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,39 +20,67 @@ import com.shunya.project2021.Models.Anime;
 import com.shunya.project2021.Models.User;
 import com.shunya.project2021.Services.AnimeService;
 import com.shunya.project2021.Services.UserService;
+import com.shunya.project2021.Validators.UserValidator;
 
 @Controller
 public class AnimeApi {
+	@Autowired
 	private AnimeService animeService;
+	@Autowired
 	private UserService uService;
+	@Autowired
+	private UserValidator uVal;
 	
-	public AnimeApi(AnimeService animeService) {
-		this.animeService = animeService;
-	}
-	@GetMapping("/login")
-	public String homePage(@ModelAttribute("email") User user) {
-		return "homepage.jsp";
-	}
-//	@PostMapping("/login")
-//	//Reminder: RequestParam->used for jsp files later on.
-//	public String login(@Valid @ModelAttribute("userToLogin") Long userId, HttpSession session, BindingResult result) {
-//		if (result.hasErrors()) {
-//			return "homepage.jsp";
-//		}
-//		session.setAttribute("userLogin", userId);
-//		return "redirect:/login";
+//	@GetMapping("/register")
+//	public String registeration(@ModelAttribute("user") User user) {
+//		return "regist.jsp";
 //	}
+//	
+//	@PostMapping("/register")
+//	public String registerUser(@Valid @ModelAttribute("user") User user, BindingResult result, HttpSession session) {
+//		uVal.validate(user, result);
+//		if(result.hasErrors()) {
+//			return "regist.jsp";
+//		} else {
+//			uService.registerUser(user);
+//			session.setAttribute("user_id", user.getId());
+//			return "redirect:/login";
+//		}
+//	}
+//	
+	@GetMapping("/login")
+	public String loginPage(@ModelAttribute("user") User user) {
+		return "login.jsp";
+	}
 	
 	@PostMapping("/login")
-	public String login(@RequestParam("lemail") String email, @RequestParam("lpassword") String password, RedirectAttributes redirectAttr, HttpSession session) {
-		if(!this.uService.authenticateUser(email, password)) {
+	public String login(@RequestParam("email") String email, @RequestParam("password") String password, RedirectAttributes redirectAttr, HttpSession session) {
+		if(!uService.authenticateUser(email, password)) {
 			redirectAttr.addFlashAttribute("loginError", "Invalid Credentials");
 			return "redirect:/login";
+		} else {
+			User user = uService.getByEmail(email);
+			session.setAttribute("id", user.getId());
+			return "redirect:/animes";
 		}
-		User user = this.uService.getByEmail(email);
-		session.setAttribute("user_id", user.getId());
-		return "redirect:/animes";
 	}
+	
+	
+	
+	//Postmap for login 1 exp.
+	
+//	@PostMapping("/login")
+//	public String login(@Valid @ModelAttribute("userToLogin") Long userId, HttpSession session, BindingResult result) {
+//		if (result.hasErrors()) {
+//			return "login.jsp";
+//		}
+//		session.setAttribute("userLogin", userId);
+//		return "redirect:/animes";
+//	}
+//	
+	
+	//postMap for login 2 exp.
+	
 	
 	
 	@GetMapping("/logout")
@@ -59,6 +88,7 @@ public class AnimeApi {
 		session.invalidate();
 		return "redirect:/login";
 	}
+	
 	@GetMapping("/animes")
 	public String index(Model model) {
 		List<Anime> animes = animeService.allAnimes();

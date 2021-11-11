@@ -81,7 +81,7 @@ public class User {
 		this.password = password;
 	}
 
-	public String getPasswordCsonf() {
+	public String getPasswordConf() {
 		return passwordConf;
 	}
 

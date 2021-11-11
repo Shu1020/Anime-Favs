@@ -65,6 +65,7 @@ public class Anime {
 	 private Date createdAt;
 	 @DateTimeFormat(pattern="yyyy-MM-dd")
 	 private Date updatedAt;
+	 
 	public Anime() {
 	}
 	public Anime(String title, String desc, String genre, int year, int rating) {
